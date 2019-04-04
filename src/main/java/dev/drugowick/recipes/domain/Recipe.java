@@ -26,6 +26,13 @@ public class Recipe {
     @Lob
     private Byte[] image;
 
+    /**
+     * I added mappedBy here by myself. Not sure why John didn't do it.
+     * Will test later and understand.
+     */
+    @OneToOne(cascade = CascadeType.ALL)
+    private Notes notes;
+
     public Long getId() {
         return id;
     }
@@ -113,7 +120,4 @@ public class Recipe {
     public void setNotes(Notes notes) {
         this.notes = notes;
     }
-
-    @OneToOne(cascade = CascadeType.ALL)
-    private Notes notes;
 }
