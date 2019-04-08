@@ -1,6 +1,11 @@
 package dev.drugowick.recipes.domain;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import javax.persistence.*;
+import java.util.Calendar;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -10,18 +15,24 @@ public class Recipe {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @CreationTimestamp
+    private Calendar createDate;
+
+    @UpdateTimestamp
+    private Calendar lastUpdateDate;
+
     private String description;
     private Integer prepTime;
     private Integer cookTime;
     private Integer servings;
     private String source;
     private String url;
+
+    @Lob
     private String directions;
-    //TODO
-    //private Difficulty difficulty;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
-    private Set<Ingredient> ingredientSet;
+    private Set<Ingredient> ingredientSet = new HashSet<>();
 
     @Lob
     private Byte[] image;
@@ -36,7 +47,7 @@ public class Recipe {
     @JoinTable(name = "recipe_category",
             joinColumns = @JoinColumn(name = "recipe_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id"))
-    private Set<Category> categories;
+    private Set<Category> categories = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -44,6 +55,22 @@ public class Recipe {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Calendar getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Calendar createDate) {
+        this.createDate = createDate;
+    }
+
+    public Calendar getLastUpdateDate() {
+        return lastUpdateDate;
+    }
+
+    public void setLastUpdateDate(Calendar lastUpdateDate) {
+        this.lastUpdateDate = lastUpdateDate;
     }
 
     public String getDescription() {
@@ -132,6 +159,7 @@ public class Recipe {
 
     public void setNotes(Notes notes) {
         this.notes = notes;
+        notes.setRecipe(this);
     }
 
     public Set<Category> getCategories() {
@@ -140,5 +168,16 @@ public class Recipe {
 
     public void setCategories(Set<Category> categories) {
         this.categories = categories;
+    }
+
+    public Recipe addIngredient (Ingredient ingredient) {
+        this.ingredientSet.add(ingredient);
+        ingredient.setRecipe(this);
+        return this;
+    }
+
+    public Recipe addCategory (Category category) {
+        this.categories.add(category);
+        return this;
     }
 }

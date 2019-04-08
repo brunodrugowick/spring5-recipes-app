@@ -8,3 +8,4 @@ INSERT INTO unit_of_measure (description) VALUES ( 'Cup' );
 INSERT INTO unit_of_measure (description) VALUES ( 'Pinch' );
 INSERT INTO unit_of_measure (description) VALUES ( 'ML' );
 INSERT INTO unit_of_measure (description) VALUES ( 'Grams' );
+INSERT INTO unit_of_measure (description) VALUES ( 'Units' );

@@ -15,6 +15,13 @@ public class Notes {
     @Lob
     private String notes;
 
+    public Notes(String notes) {
+        this.notes = notes;
+    }
+
+    public Notes() {
+    }
+
     public Long getId() {
         return id;
     }
