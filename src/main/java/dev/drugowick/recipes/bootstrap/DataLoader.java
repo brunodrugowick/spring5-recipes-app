@@ -4,15 +4,22 @@ import dev.drugowick.recipes.domain.*;
 import dev.drugowick.recipes.repositories.CategoryRepository;
 import dev.drugowick.recipes.repositories.RecipeRepository;
 import dev.drugowick.recipes.repositories.UnitOfMeasureRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Transactional is here to make sure that Hibernate doesn't throw an error related to the lazy initialization
+ * of some relationships.
+ */
 @Component
+@Transactional
 public class DataLoader implements CommandLineRunner {
 
     @Value("${petclinic.devmode:#{'0'}}")
