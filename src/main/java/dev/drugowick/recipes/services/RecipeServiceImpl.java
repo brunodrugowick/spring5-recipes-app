@@ -1,9 +1,13 @@
 package dev.drugowick.recipes.services;
 
+import dev.drugowick.recipes.converters.RecipeCommandToRecipe;
+import dev.drugowick.recipes.converters.RecipeToRecipeCommand;
+import dev.drugowick.recipes.converters.commands.RecipeCommand;
 import dev.drugowick.recipes.domain.Recipe;
 import dev.drugowick.recipes.repositories.RecipeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -12,14 +16,18 @@ import java.util.Optional;
 public class RecipeServiceImpl implements RecipeService {
 
     private final RecipeRepository recipeRepository;
+    private final RecipeCommandToRecipe recipeCommandToRecipe;
+    private final RecipeToRecipeCommand recipeToRecipeCommand;
 
-    public RecipeServiceImpl(RecipeRepository recipeRepository) {
+    public RecipeServiceImpl(RecipeRepository recipeRepository, RecipeCommandToRecipe recipeCommandToRecipe, RecipeToRecipeCommand recipeToRecipeCommand) {
         this.recipeRepository = recipeRepository;
+        this.recipeCommandToRecipe = recipeCommandToRecipe;
+        this.recipeToRecipeCommand = recipeToRecipeCommand;
     }
+    
 
     @Override
     public Iterable<Recipe> getRecipes() {
-        log.debug("recipeRepository.findAll()");
         return recipeRepository.findAll();
     }
 
@@ -34,5 +42,12 @@ public class RecipeServiceImpl implements RecipeService {
         return recipeOptional.get();
     }
 
+    @Override
+    @Transactional
+    public RecipeCommand saveRecipeCommand(RecipeCommand recipeCommand) {
+        return recipeToRecipeCommand.convert(
+            recipeRepository.save(recipeCommandToRecipe.convert(recipeCommand))
+        );
+    }
 
 }
