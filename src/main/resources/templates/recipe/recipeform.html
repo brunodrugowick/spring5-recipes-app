@@ -136,6 +136,10 @@
                             </div>
                         </div>
                     </div>
+                    <!-- As pointed out in the Udemy course, on every update a new note was being created.
+                    The input below fixes it, making the template aware of the note and, I guess, 
+                    passing the Note reference around (in and out of the view, model, whatever...) -->
+                    <input type="hidden" th:field="*{notes.id}"/>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
             </form>

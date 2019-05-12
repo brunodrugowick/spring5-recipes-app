@@ -28,16 +28,20 @@
                                 <th>ID</th>
                                 <th>Description</th>
                                 <th>Difficulty</th>
-                                <th>View</th>
-                                <th>Update</th>
+                                <th>Actions</th>
                             </tr>
                             </thead>
                             <tr th:each="recipe : ${recipes}">
                                 <td th:text="${recipe.id}">123</td>
                                 <td th:text="${recipe.description}">Tasty Goodness</td>
                                 <td th:text="${recipe.difficulty}">Izi Pizi</td>
-                                <td><a href="#" th:href="@{'/recipe/' + ${recipe.id} + '/show'}">View</a> </td>
-                                <td><a href="#" th:href="@{'/recipe/' + ${recipe.id} + '/update'}">Update</a> </td>
+                                <td>
+                                    <a href="#" th:href="@{'/recipe/' + ${recipe.id} + '/show'}" class="btn btn-link" style="float: left;">View</a> 
+                                    <a href="#" th:href="@{'/recipe/' + ${recipe.id} + '/update'}" class="btn btn-link" style="float: left;">Update</a>
+                                    <form action="#" th:action="@{'/recipe/' + ${recipe.id} + '/delete'}" th:method="delete" style="float: left;">
+                                        <button type="submit" id="submitButton" class="btn btn-link">Delete</button>
+                                    </form>
+                                </td>
                             </tr>
                         </table>
                     </div>
