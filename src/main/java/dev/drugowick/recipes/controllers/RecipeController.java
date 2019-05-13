@@ -6,6 +6,7 @@ import dev.drugowick.recipes.services.RecipeService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,5 +50,10 @@ public class RecipeController {
         recipeService.deleteById(Long.valueOf(id));
         return "redirect:/";
     }
-
+    
+    @ExceptionHandler(Exception.class)
+    public String handleException(Model model, Exception exception) {
+        model.addAttribute("exceptionMessage", exception.getMessage());
+        return "error";
+    }
 }
