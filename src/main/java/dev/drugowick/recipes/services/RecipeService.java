@@ -6,11 +6,13 @@ import dev.drugowick.recipes.domain.Recipe;
 public interface RecipeService {
     Iterable<Recipe> getRecipes();
 
+    Recipe saveRecipe(Recipe recipe);
+
     Recipe findById(Long id);
 
     RecipeCommand saveRecipeCommand(RecipeCommand recipeCommand);
 
-    Object findCommandById(Long id);
+    RecipeCommand findCommandById(Long id);
     
     void deleteById(Long id);
 }
