@@ -93,7 +93,7 @@ public class IngredientServiceImpl implements IngredientService {
         /**
          * My implementation with Services
          *
-         * TODO should I use other entities repositories or their services?
+         * TODO should I use other entities' repositories or their services?
          * My implementation is using Services but John's is using Repositories.
          */
 
@@ -114,13 +114,17 @@ public class IngredientServiceImpl implements IngredientService {
                     .orElseThrow(() -> new RuntimeException("The UnitOfMeasure must exist before saving an Ingredient with it. The following UnitOfMeasure could not be found: " + ingredientCommand.getUnitOfMeasure().toString())));
 
         } else {
-            recipe.addIngredient(ingredientCommandToIngredient.convert(ingredientCommand));
-        }   
-        
+            Ingredient ingredient = ingredientCommandToIngredient.convert(ingredientCommand);
+            ingredient.setRecipe(recipe);
+            recipe.addIngredient(ingredient);
+        }
+
         Recipe savedRecipe = recipeService.saveRecipe(recipe);
 
         return ingredientToIngredientCommand.convert(savedRecipe.getIngredientSet().stream()
-                .filter(recipeIngredient -> recipeIngredient.getId().equals((ingredientCommand.getId())))
+                .filter(recipeIngredient -> recipeIngredient.getAmount().equals((ingredientCommand.getAmount())))
+                .filter(recipeIngredient -> recipeIngredient.getDescription().equals((ingredientCommand.getDescription())))
+                .filter(recipeIngredient -> recipeIngredient.getUnitOfMeasure().getId().equals((ingredientCommand.getUnitOfMeasure().getId())))
                 .findFirst()
                 .get());
     }

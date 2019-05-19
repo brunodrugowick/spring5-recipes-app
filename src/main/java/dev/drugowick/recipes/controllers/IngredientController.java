@@ -1,6 +1,7 @@
 package dev.drugowick.recipes.controllers;
 
 import dev.drugowick.recipes.converters.commands.IngredientCommand;
+import dev.drugowick.recipes.converters.commands.UnitOfMeasureCommand;
 import dev.drugowick.recipes.services.IngredientService;
 import dev.drugowick.recipes.services.RecipeService;
 import dev.drugowick.recipes.services.UnitOfMeasureService;
@@ -32,6 +33,21 @@ public class IngredientController {
     public String showRecipeIngredient(@PathVariable String recipeId, @PathVariable String ingredientId, Model model) {
         model.addAttribute("ingredient", ingredientService.findByRecipeIdAndIngredientId(Long.valueOf(recipeId), Long.valueOf(ingredientId)));
         return "recipe/ingredient/show";
+    }
+
+    @GetMapping("recipe/{recipeId}/ingredient/new")
+    public String newIngredient(@PathVariable String recipeId, Model model) {
+
+        if (recipeService.findCommandById(Long.parseLong(recipeId)) == null) {
+            throw new RuntimeException("A valid RecipeId in necessary to create an Ingredient");
+        }
+
+        IngredientCommand ingredientCommand = new IngredientCommand();
+        ingredientCommand.setRecipeId(Long.parseLong(recipeId));
+        ingredientCommand.setUnitOfMeasure(new UnitOfMeasureCommand());
+        model.addAttribute("ingredient", ingredientCommand);
+        model.addAttribute("unitOfMeasureList", unitOfMeasureService.findAll());
+        return "recipe/ingredient/ingredientform";
     }
 
     @GetMapping("recipe/{recipeId}/ingredient/{ingredientId}/update")
