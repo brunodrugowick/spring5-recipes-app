@@ -40,7 +40,7 @@ public class IngredientServiceImpl implements IngredientService {
         RecipeCommand recipeCommand = (RecipeCommand) recipeService.findCommandById(recipeId);
         Set<IngredientCommand> ingredientCommandSet = recipeCommand.getIngredients();
         for (IngredientCommand ingredientCommand : ingredientCommandSet) {
-            if (ingredientCommand.getId() == ingredientId) {
+            if (ingredientCommand.getId().equals(ingredientId)) {
                 return ingredientCommand;
             }
         }

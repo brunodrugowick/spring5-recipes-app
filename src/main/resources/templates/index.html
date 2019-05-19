@@ -45,6 +45,13 @@
                             </tr>
                         </table>
                     </div>
+                    <div class="table-responsive" th:unless="${not #lists.isEmpty(recipes)}">
+                        <p>You (or someone else) deleted all the Recipes (and probably thought the Demo would break).</p>
+                        <p>But here's your (or maybe mine) salvation!</p>
+                        <form action="/resetDemo" method="post">
+                            <button type="submit" id="submitButton" class="btn btn-primary">Reset Demo</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

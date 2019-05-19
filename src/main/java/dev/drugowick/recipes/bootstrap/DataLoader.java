@@ -4,9 +4,7 @@ import dev.drugowick.recipes.domain.*;
 import dev.drugowick.recipes.repositories.CategoryRepository;
 import dev.drugowick.recipes.repositories.RecipeRepository;
 import dev.drugowick.recipes.repositories.UnitOfMeasureRepository;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +18,7 @@ import java.util.Set;
  */
 @Component
 @Transactional
-public class DataLoader implements CommandLineRunner {
+public class DataLoader{
 
     @Value("${petclinic.devmode:#{'0'}}")
     private String devMode;
@@ -39,12 +37,10 @@ public class DataLoader implements CommandLineRunner {
         this.categoryRepository = categoryRepository;
     }
 
-    @Override
-    public void run(String... args) throws Exception {
-
+    public void saveAll() {
         if (devMode.equals("1") && devPass.equals("aiowas")) {
             System.out.println("DEVMODE: Sample data will be created.");
-            recipeRepository.saveAll(getRecipes());
+            recipeRepository.saveAll(this.getRecipes());
         }
     }
 

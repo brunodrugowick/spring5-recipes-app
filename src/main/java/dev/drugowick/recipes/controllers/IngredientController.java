@@ -55,7 +55,7 @@ public class IngredientController {
                                          @PathVariable String ingredientId, Model model) {
         Long ingredientIdLong = Long.parseLong(ingredientId);                                       
         recipeService.findCommandById(Long.valueOf(recipeId)).getIngredients().forEach(ingredient -> {
-            if (ingredient.getId() == ingredientIdLong) {
+            if (ingredient.getId().equals(ingredientIdLong)) {
                 model.addAttribute("ingredient", ingredientService.findByRecipeIdAndIngredientId(Long.parseLong(recipeId), 
                                                                                                  Long.parseLong(ingredientId)));
                 model.addAttribute("unitOfMeasureList", unitOfMeasureService.findAll());
