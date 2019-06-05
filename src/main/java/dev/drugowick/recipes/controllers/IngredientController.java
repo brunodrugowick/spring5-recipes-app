@@ -71,6 +71,14 @@ public class IngredientController {
         return "redirect:/recipe/" + savedIngredientCommand.getRecipeId() + "/ingredient/" + savedIngredientCommand.getId() + "/show";
     }
 
+    @DeleteMapping("recipe/{recipeId}/ingredient/{ingredientId}/delete")
+    public String deleteIngredient(@PathVariable String recipeId,
+                                   @PathVariable String ingredientId,
+                                   Model model) {
+        ingredientService.deleteById(Long.valueOf(ingredientId), Long.valueOf(recipeId));
+        return "redirect:/recipe/" + recipeId + "/ingredients";
+    }
+
     @ExceptionHandler(Exception.class)
     public String handleException(Model model, Exception exception) {
         model.addAttribute("exceptionMessage", exception.getMessage());

@@ -6,8 +6,7 @@ import dev.drugowick.recipes.converters.commands.IngredientCommand;
 import dev.drugowick.recipes.converters.commands.RecipeCommand;
 import dev.drugowick.recipes.domain.Ingredient;
 import dev.drugowick.recipes.domain.Recipe;
-import dev.drugowick.recipes.repositories.RecipeRepository;
-import dev.drugowick.recipes.repositories.UnitOfMeasureRepository;
+import dev.drugowick.recipes.repositories.IngredientRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,17 +18,15 @@ import java.util.Set;
 @Service
 public class IngredientServiceImpl implements IngredientService {
 
+    private final IngredientRepository ingredientRepository;
     private final RecipeService recipeService;
-    private final RecipeRepository recipeRepository;
-    private final UnitOfMeasureRepository unitOfMeasureRepository;
     private final IngredientCommandToIngredient ingredientCommandToIngredient;
     private final IngredientToIngredientCommand ingredientToIngredientCommand;
     private final UnitOfMeasureService unitOfMeasureService;
 
-    public IngredientServiceImpl(RecipeService recipeService, RecipeRepository recipeRepository, UnitOfMeasureRepository unitOfMeasureRepository, IngredientCommandToIngredient ingredientCommandToIngredient, IngredientToIngredientCommand ingredientToIngredientCommand, UnitOfMeasureService unitOfMeasureService) {
+    public IngredientServiceImpl(IngredientRepository ingredientRepository, RecipeService recipeService, IngredientCommandToIngredient ingredientCommandToIngredient, IngredientToIngredientCommand ingredientToIngredientCommand, UnitOfMeasureService unitOfMeasureService) {
+        this.ingredientRepository = ingredientRepository;
         this.recipeService = recipeService;
-        this.recipeRepository = recipeRepository;
-        this.unitOfMeasureRepository = unitOfMeasureRepository;
         this.ingredientCommandToIngredient = ingredientCommandToIngredient;
         this.ingredientToIngredientCommand = ingredientToIngredientCommand;
         this.unitOfMeasureService = unitOfMeasureService;
@@ -129,4 +126,20 @@ public class IngredientServiceImpl implements IngredientService {
                 .get());
     }
 
+    @Override
+    @Transactional
+    public void deleteById(Long ingredientId, Long recipeId) {
+        Recipe recipe = recipeService.findById(recipeId);
+        Ingredient ingredientToDelete = recipe.getIngredientSet().stream()
+                                    .filter(ingredient -> ingredient.getId().equals(ingredientId))
+                                    .findFirst()
+                                    .get();
+        if (ingredientToDelete.getId().equals(ingredientId) && ingredientToDelete.getRecipe().getId().equals(recipeId)) {
+            recipe.getIngredientSet().remove(ingredientToDelete);
+            ingredientRepository.delete(ingredientToDelete);
+            log.debug("Ingredient " + ingredientId + " from recipe " + recipe.getId() + " successfully removed.");
+        } else {
+            throw new RuntimeException("Could not find ingredient " + ingredientId + " on recipe " + recipeId + " to delete");
+        }
+    }
 }
