@@ -1,6 +1,6 @@
 package dev.drugowick.recipes.controllers;
 
-import dev.drugowick.recipes.converters.commands.RecipeCommand;
+import dev.drugowick.recipes.domain.Recipe;
 import dev.drugowick.recipes.services.ImageService;
 import dev.drugowick.recipes.services.RecipeService;
 
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.thymeleaf.util.ContentTypeUtils;
 
 @Controller
 public class ImageController {
@@ -45,13 +44,13 @@ public class ImageController {
 
     @GetMapping("recipe/{id}/recipeimage")
     public void renderRecipeImage(@PathVariable String id, HttpServletResponse response) throws IOException {
-        RecipeCommand recipeCommand = recipeService.findCommandById(Long.valueOf(id));
+        Recipe recipe = recipeService.findById(Long.valueOf(id));
         response.setContentType("image/jpeg");
 
-        if (recipeCommand.getImage() != null) {
-            byte[] byteArray = new byte[recipeCommand.getImage().length];
+        if (recipe.getImage() != null) {
+            byte[] byteArray = new byte[recipe.getImage().length];
             int i = 0;
-            for (Byte wrappedByte : recipeCommand.getImage()) {
+            for (Byte wrappedByte : recipe.getImage()) {
                 byteArray[i++] = wrappedByte; //auto unboxing
             }
 
